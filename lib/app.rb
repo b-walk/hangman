@@ -1,9 +1,9 @@
 class Letter
-  attr_reader :visible
+  attr_accessor :display, :visible?
 
   def initialize(letter)
-    @self = letter
-    @visible = false
+    @display = letter
+    @visible? = false
   end
 end
 
@@ -17,12 +17,20 @@ class Word
     @length = word.length
   end
 
+  def print
+    @letters.each do |letter|
+      if letter.visible?
+        print " #{letter.display} "
+      else
+        print " _ "
+      end
+    end
+  end
+
   def self.random
     Word.new(DICTIONARY.sample)
   end
 end
-
-puts Word.random
 
 # GAME FLOW
 # A new instance of Game is created
