@@ -1,68 +1,30 @@
-class Display
-  attr_accessor :word, :guesses_remaining, :used_guesses, :visible_word
-
-  def initialize(actual_word)
-    @actual_word = actual_word
-    @visible_word = Array.new(actual_word.length - 1, "_")
-    @used_guesses = []
-  end
-
-  def update(guess)
-    @actual_word.each_with_index do |letter, index|
-      if @used_guesses.include?(guess)
-        puts "Letter has already been guessed."
-      elsif guess == letter
-        @visible_word[index] = letter
-        @used_guesses << guess
-      elsif guess != letter
-        puts "Word does not contain this letter."
-        @used_guesses << guess
-        @guesses_remaining -= 1
-      end
-    end
-    @guesses_remaining
-  end
-end
-
-class Word
-  attr_accessor :letters
-
-  def initialize(string)
-    @letters = string.split('')
-    @length = string.length
-  end
-end
-
 class Game
-  attr_reader :word
+  attr_accessor :word, :display_word
 
   DICTIONARY = File.open('google-10000-english-no-swears.txt', 'r').readlines.select { |word| word.length.between?(5, 12) }
-  puts DICTIONARY.sample
 
   def initialize
-    @word = DICTIONARY.sample
-    @guesses_remaining = 6
-    @display = Display.new(@word)
+    @word = DICTIONARY.sample.chomp.split('')
+    @display = Array.new(word.length, '_')
   end
 
   def play
-    while @guesses_remaining > 0
-      guess
+    6.times do
+      print "#{@word}\n"
+      print "#{@display}\n"
+      puts "Guess a letter:"
+      guess = gets.chomp.downcase
+      @word.each_with_index do |letter, index|
+        if letter == guess
+          @display[index] = letter
+        end
+      end
     end
-  end
-
-  def guess
-    puts "Word: #{@display.visible_word}"
-    puts "Guesses remaining: #{@guesses_remaining}"
-    puts "Guess a letter:"
-    guess = gets.chomp.downcase
-    @guesses_remaining = update(guess)
   end
 end
 
 game = Game.new
 game.play
-
 
 # GAME FLOW
 # A new instance of Game is created
