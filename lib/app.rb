@@ -1,75 +1,69 @@
-require 'pry-byebug'
+class Display
+  attr_accessor :word, :guesses_remaining, :used_guesses, :visible_word
 
-module App
-  class Letter
-    attr_accessor :visible, :chr
-
-    def initialize(chr)
-      @chr = chr
-      @visible = false
-    end
-
-    def display
-      if @visible == false
-        print " _ "
-      else
-        print " #{@chr} "
-      end
-    end
+  def initialize(actual_word)
+    @actual_word = actual_word
+    @visible_word = Array.new(actual_word.length - 1, "_")
+    @used_guesses = []
   end
 
-  class Word
-    attr_accessor :letters, :length
-
-    DICTIONARY = File.open('google-10000-english-no-swears.txt', 'r').readlines.select do |word|
-      word.length.between?(5, 12)
-    end
-
-    def initialize(word)
-      @letters = word.split('').map { |letter| Letter.new(letter) }
-      puts @letters[0].chr
-      @length = word.length
-    end
-
-    def display
-      @letters.each { |letter| letter.display }
-    end
-
-    def self.random
-      Word.new(DICTIONARY.sample)
-    end
-  end
-
-  class Game
-    attr_accessor :word, :winner
-
-    def initialize
-      @word = Word.random
-      @winner = nil
-      @guesses_remaining = 6
-      @word.letters.each {|_x| print " #{_x.chr} "}
-      play
-    end
-
-    def play
-      while @guesses_remaining > 0
-        puts "Guess a letter:                    (Guesses remaining:  #{@guesses_remaining})"
-        guess = gets.chomp.downcase
-        @word.letters.each do |letter|
-          if guess == letter.chr
-            letter.visible = true
-          else
-            next
-          end
-        end
-        @word.display
+  def update(guess)
+    @actual_word.each_with_index do |letter, index|
+      if @used_guesses.include?(guess)
+        puts "Letter has already been guessed."
+      elsif guess == letter
+        @visible_word[index] = letter
+        @used_guesses << guess
+      elsif guess != letter
+        puts "Word does not contain this letter."
+        @used_guesses << guess
         @guesses_remaining -= 1
       end
     end
+    @guesses_remaining
   end
 end
-include App
-App::Game.new
+
+class Word
+  attr_accessor :letters
+
+  def initialize(string)
+    @letters = string.split('')
+    @length = string.length
+  end
+end
+
+class Game
+  attr_reader :word
+
+  DICTIONARY = File.open('google-10000-english-no-swears.txt', 'r').readlines.select { |word| word.length.between?(5, 12) }
+  puts DICTIONARY.sample
+
+  def initialize
+    @word = DICTIONARY.sample
+    @guesses_remaining = 6
+    @display = Display.new(@word)
+  end
+
+  def play
+    while @guesses_remaining > 0
+      guess
+    end
+  end
+
+  def guess
+    puts "Word: #{@display.visible_word}"
+    puts "Guesses remaining: #{@guesses_remaining}"
+    puts "Guess a letter:"
+    guess = gets.chomp.downcase
+    @guesses_remaining = update(guess)
+  end
+end
+
+game = Game.new
+game.play
+
+
 # GAME FLOW
 # A new instance of Game is created
 # New Word is generated
