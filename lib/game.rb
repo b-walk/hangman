@@ -9,6 +9,12 @@ class Letter
     @visible = false
   end
 
+  def check(chr)
+    if @chr == chr
+      @visible = true
+    end
+  end
+
   def display
     if @visible
       @chr
@@ -25,19 +31,31 @@ class Game
   include Dictionary
 
   def initialize
-    @word = random_word.split('').map { |chr| Letter.new(chr) }
+    @string = random_word
+    @word = @string.split('').map { |chr| Letter.new(chr) }
     @guesses_remaining = 6
     @used_letters = []
   end
 
-  def guess(letter)
-    # has letter been used already?
-    # if no, check word for letter and change visibility of matches to true
-    # if yes, display error message and repeat method
+  def play
+    until @guesses_remaining == 0
+      print 'Word: '
+      @word.each { |letter| print "#{letter.display} "}
+      puts "Guess a letter:"
+      puts "Guesses remaining: #{@guesses_remaining}"
+      guess(gets.chomp.downcase)
+      @guesses_remaining -= 1
+    end
+    puts "The word was #{@string}!"
+  end
+
+  private
+
+  def guess(chr)
+    @word.each { |letter| letter.check(chr) }
   end
 end
 
 # tests
 game = Game.new
-puts game.word.string
-game.word.display
+game.play
