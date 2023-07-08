@@ -2,8 +2,6 @@ require_relative 'dictionary'
 
 # Letter objects track the visibility states of letters
 class Letter
-  attr_writer :visible
-
   def initialize(chr)
     @chr = chr
     @visible = false
@@ -26,8 +24,6 @@ end
 
 # Game objects will create new sets of game data (e.g. the word, remaining guesses, etc.)
 class Game
-  attr_reader :word, :guesses_remaining, :used_letters
-
   include Dictionary
 
   def initialize
