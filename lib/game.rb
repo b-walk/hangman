@@ -1,3 +1,22 @@
+# Letter objects track the visibility states of letters
+class Letter
+  attr_reader :chr
+  attr_accessor :visible
+
+  def initialize(chr)
+    @chr = chr
+    @visible = false
+  end
+
+  def display
+    if @visible
+      @chr
+    else
+      '_'
+    end
+  end
+end
+
 # Word objects will contain random strings pulled from google-10000-english-no-swears.txt
 class Word
 
