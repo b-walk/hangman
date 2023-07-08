@@ -1,7 +1,8 @@
+require_relative 'dictionary'
+
 # Letter objects track the visibility states of letters
 class Letter
-  attr_reader :chr
-  attr_accessor :visible
+  attr_writer :visible
 
   def initialize(chr)
     @chr = chr
@@ -19,16 +20,13 @@ end
 
 # Word objects will contain random strings pulled from google-10000-english-no-swears.txt
 class Word
-
-  DICTIONARY = File.open('google-10000-english-no-swears.txt', 'r').readlines.map{ |word| word.chomp }.
-  select{ |word| word.length.between?(5, 12)}
-
-  def initialize
-    @string = Word.random
+  def initialize(string)
+    @string = string
+    @letters = @string.split('').map { |letter| Letter.new(letter) }
   end
 
-  def self.random
-    DICTIONARY.sample
+  def display
+    @letters.each { |letter| print "#{letter.display} "}
   end
 end
 
@@ -36,8 +34,10 @@ end
 class Game
   attr_reader :word, :guesses_remaining, :used_letters
 
+  include Dictionary
+
   def initialize
-    @word = Word.random
+    @word = random_word
     @guesses_remaining = 6
     @used_letters = []
   end
@@ -45,6 +45,3 @@ end
 
 # tests
 game = Game.new
-
-puts game.word
-puts game.guesses_remaining
