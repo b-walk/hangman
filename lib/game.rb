@@ -35,11 +35,11 @@ class Game
 
   def play
     until @guesses_remaining == 0
-      print 'Word: '
-      @word.each { |letter| print "#{letter.display} "}
-      puts "Guess a letter:"
+      @word.each { |letter| print "#{letter.display} " }
+      puts "\n\n"
       puts "Guesses remaining: #{@guesses_remaining}"
-      guess(gets.chomp.downcase)
+      puts "\n\n"
+      guess()
       @guesses_remaining -= 1
     end
     puts "The word was #{@string}!"
@@ -47,8 +47,16 @@ class Game
 
   private
 
-  def guess(chr)
-    @word.each { |letter| letter.check(chr) }
+  def guess
+    puts 'Guess a letter:'
+    chr = gets.chomp.downcase
+    unless @used_letters.include?(chr)
+      @word.each { |letter| letter.check(chr) }
+      @used_letters << chr
+    else
+      puts "#{chr} has already been guessed."
+      guess
+    end
   end
 end
 
