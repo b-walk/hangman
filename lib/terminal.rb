@@ -7,16 +7,49 @@ module Terminal
     "/ __  / (_| | | | | (_| | | | | | | (_| | | | |",
     "\\/ /_/ \\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|",
     "                   |___/                       ",
+    "\n"
+  ]
+end
+
+class Hangman
+  DEFAULT = [
     "\n",
-    "       by Blake",
+    "         _______",
+    "         |     |",
+    "         |     O",
+    "         |    /|\\",
+    "         |    / \\",
+    "         |",
+    "    _____|_____",
     "\n"
   ]
 
-  def print_logo
-    puts LOGO
+  def trim
+
   end
 end
 
-include Terminal
+class Letter
+  def initialize(letter)
+    @letter = letter
+    @visible = false
+  end
 
-print_logo
+  def icon
+    if @visible
+      @char
+    else
+      '_'
+    end
+  end
+end
+
+class Word
+  def initialize(word)
+    @letters = word.chars.map { |letter| Letter.new(letter) }
+  end
+
+  def print_icons
+    @letters.each { |letter| print "#{letter.icon} " }
+  end
+end
