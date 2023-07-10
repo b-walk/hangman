@@ -2,23 +2,19 @@ require_relative 'dictionary'
 
 # Letter objects track the visibility states of letters
 class Letter
+  attr_writer :visible
+
   def initialize(chr)
     @chr = chr
     @visible = false
   end
 
   def check(chr)
-    if @chr == chr
-      @visible = true
-    end
+    if @chr == chr then @visible = true end
   end
 
   def display
-    if @visible
-      @chr
-    else
-      '_'
-    end
+    if @visible then @chr else '_' end
   end
 end
 
@@ -30,36 +26,23 @@ class Game
     @string = random_word
     @word = @string.split('').map { |chr| Letter.new(chr) }
     @guesses_remaining = 6
-    @used_letters = []
+    @used_guesses = []
   end
 
   def play
-    until @guesses_remaining == 0
-      @word.each { |letter| print "#{letter.display} " }
-      puts "\n\n"
-      puts "Guesses remaining: #{@guesses_remaining}"
-      puts "\n\n"
-      guess()
-      @guesses_remaining -= 1
-    end
-    puts "The word was #{@string}!"
+    # loop round (show word, get guess) until player runs out of tries
   end
 
   private
 
   def guess
-    puts 'Guess a letter:'
-    chr = gets.chomp.downcase
-    unless @used_letters.include?(chr)
-      @word.each { |letter| letter.check(chr) }
-      @used_letters << chr
-    else
-      puts "#{chr} has already been guessed."
-      guess
-    end
+    gets.chomp.downcase
   end
 end
 
 # tests
 game = Game.new
 game.play
+
+# PROGRAM START
+# Logo is presented; a new game is initialized
