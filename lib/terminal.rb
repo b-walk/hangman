@@ -1,5 +1,6 @@
-# The Terminal module will contain methods that display text to the terminal
-module Terminal
+# Terminal objects are created at the start of each game
+# They store images and display/update them each round
+class Terminal
   LOGO = [
     "\n",
     "  /\\  /\\__ _ _ __   __ _ _ __ ___   __ _ _ __  ",
@@ -9,23 +10,40 @@ module Terminal
     "                   |___/                       ",
     "\n"
   ]
+
+  def initialize(word)
+    @body = Body.new
+    @word = Word.new(word)
+  end
+
+  def refresh(guessed_char, game_data = {})
+    @word.reveal_matches()
+  end
+
+  def display
+    puts @body.image
+    puts "\n"
+    puts @word
+    puts "\n"
+  end
 end
 
-class Hangman
+# Body objects store and change the image of the hanging man
+class Body
   attr_reader :image
 
-  BODY = {
+  BODY = [
     " O",
     "/|\\",
     "/ \\"
-  }
+  ]
 
   def initialize
     @image = BODY
     @body = [:head, :torso, :left_arm, :right_arm, :left_leg, :right_leg]
   end
 
-  def remove
+  def remove_part
     case @body.last
     when :right_leg
       @image[2] = "/"
@@ -40,6 +58,8 @@ class Hangman
     when :head
       @image[0] = " "
     end
+
+    @body.pop
   end
 end
 
@@ -65,5 +85,13 @@ class Word
 
   def print_icons
     @letters.each { |letter| print "#{letter.icon} " }
+  end
+
+  def reveal_matches(guess)
+    @letters.each do |letter|
+      if letter.char == guess
+        letter.visible = true
+      end
+    end
   end
 end
