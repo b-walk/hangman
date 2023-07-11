@@ -12,20 +12,34 @@ module Terminal
 end
 
 class Hangman
-  DEFAULT = [
-    "\n",
-    "         _______",
-    "         |     |",
-    "         |     O",
-    "         |    /|\\",
-    "         |    / \\",
-    "         |",
-    "    _____|_____",
-    "\n"
-  ]
+  attr_reader :image
 
-  def trim
+  BODY = {
+    " O",
+    "/|\\",
+    "/ \\"
+  }
 
+  def initialize
+    @image = BODY
+    @body = [:head, :torso, :left_arm, :right_arm, :left_leg, :right_leg]
+  end
+
+  def remove
+    case @body.last
+    when :right_leg
+      @image[2] = "/"
+    when :left_leg
+      @image[2] = " "
+    when :right_arm
+      @image[1] = "/|"
+    when :left_arm
+      @image[1] = " |"
+    when :torso
+      @image[1] = " "
+    when :head
+      @image[0] = " "
+    end
   end
 end
 
