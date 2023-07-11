@@ -14,16 +14,20 @@ class Terminal
   def initialize(word)
     @body = Body.new
     @word = Word.new(word)
+    @used_guesses = []
   end
 
-  def refresh(guessed_char, game_data = {})
-    @word.reveal_matches()
+  def refresh(guessed_char)
+    @word.reveal_matches(guessed_char)
+    @used_guesses << guessed_char
   end
 
   def display
     puts @body.image
     puts "\n"
     puts @word
+    puts "\n"
+    puts @used_guesses
     puts "\n"
   end
 end
@@ -76,6 +80,12 @@ class Letter
       '_'
     end
   end
+
+  def check(guess)
+    if @letter == guess
+      @visible = true
+    end
+  end
 end
 
 class Word
@@ -88,10 +98,6 @@ class Word
   end
 
   def reveal_matches(guess)
-    @letters.each do |letter|
-      if letter.char == guess
-        letter.visible = true
-      end
-    end
+    @letters.each { |letter| letter.check(guess) }
   end
 end
