@@ -1,59 +1,113 @@
-class Letter
-  attr_accessor :char, :guessed
+require 'yaml'
 
-  def initialize(letter)
-    @char = letter
-    @guessed = false
+require_relative 'dictionary'
+require_relative 'terminal'
+require_relative 'word'
+require_relative 'save'
+
+# Game objects implement game logic on stored data values
+# Their values can be saved and loaded at any time
+class Game
+  include Dictionary
+  include Save
+
+  def initialize(data = {word: Word.new(random_word), tries: 6, incorrect_guesses: []})
+    @word = data[:word]
+    @tries = data[:tries]
+    @incorrect_guesses = data[:incorrect_guesses]
+    @terminal = Terminal.new
+
+    play
   end
 
-  def icon
-    if @guessed
-      @char
-    else
-      '_'
+  def play
+    until @tries == 0
+      @terminal.display(@word, @tries, @incorrect_guesses)
+      
+      get_input
+
+      break if @word.guessed
     end
-  end
-end
 
-class Word
-  attr_reader :string
+    restart_program
+  end
+
+  def self.start_program
+    puts "[N]ew game"
+    puts "[L]oad game"
   
-  def initialize(word)
-    @letters = word.chars.map { |letter| Letter.new(letter) }
-    @string = word
-    @correct_guesses = []
-  end
-
-  def print_icons
-    @letters.each { |letter| print "#{letter.icon} " }
-  end
-
-  def find_matches(guess)
-    @letters.each do |letter|
-      if letter.char == guess
-        letter.guessed = true
-      end
+    input = gets.chomp.downcase
+  
+    if input == 'n'
+      Game.new
+    elsif input == 'l'
+      Game.load
+    else
+      puts 'Invalid input, please try again'
+      Game.start_program
     end
   end
 
-  def includes(guess)
-    @letters.any? { |letter| letter.char == guess }
+  def self.load
+    if File.exist?('save.yaml')
+      puts "Loading saved game..."
+      sleep(1.5)
+      puts "Finished!"
+      game_data = YAML.load_file('save.yaml', permitted_classes: [Word, Symbol, Letter])
+      Game.new(game_data)
+    else
+      puts "No save data exists. Starting new game..."
+      sleep(2)
+      Game.start_program
+    end
   end
 
-  def guessed
-    @letters.all? { |letter| letter.guessed }
+  private
+
+  def get_input
+    input = gets.chomp.downcase
+
+    case input
+    when 'save'
+      save
+    when 'load'
+      puts "You may load a game after finishing this one."
+      get_input
+    else
+      guess(input)
+    end
   end
 
-  def correct_guesses
-    array = []
-
-    @letters.each do |letter|
-      if letter.guessed
-        array << letter.char
+  def guess(input)
+    if @incorrect_guesses.include?(input) || @word.correct_guesses.include?(input)
+      puts "#{input} has already been guessed. Try another letter."
+      get_input
+    elsif %w[a b c d e f g h i j k l m n o p q r s t u v w x y z].include?(input)
+      if @word.includes(input)
+        @word.find_matches(input)
+      else
+        @incorrect_guesses << input
+        @tries -= 1
       end
+    else
+      puts "Invalid input, please try again."
+      get_input
+    end
+  end
+
+  def restart_program
+    if @tries > 0
+      puts "You guessed the word! Returning to start screen..."
+      sleep(3)
+    else
+      puts "You almost got it! The word was #{@word.string}. Returning to start screen..."
+      sleep(3)
     end
 
-    array.uniq
+    Game.start_program
   end
 end
 
+
+
+Game.start_program
