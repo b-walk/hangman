@@ -11,93 +11,35 @@ class Terminal
     "\n"
   ]
 
-  def initialize(word)
-    @body = Body.new
-    @word = Word.new(word)
-    @used_guesses = []
-  end
-
-  def refresh(guessed_char)
-    @word.reveal_matches(guessed_char)
-    @used_guesses << guessed_char
-  end
-
-  def display
-    puts @body.image
-    puts "\n"
-    puts @word
-    puts "\n"
-    puts @used_guesses
-    puts "\n"
-  end
-end
-
-# Body objects store and change the image of the hanging man
-class Body
-  attr_reader :image
-
-  BODY = [
-    " O",
-    "/|\\",
-    "/ \\"
-  ]
-
   def initialize
-    @image = BODY
-    @body = [:head, :torso, :left_arm, :right_arm, :left_leg, :right_leg]
+    puts LOGO
   end
 
-  def remove_part
-    case @body.last
-    when :right_leg
-      @image[2] = "/"
-    when :left_leg
-      @image[2] = " "
-    when :right_arm
-      @image[1] = "/|"
-    when :left_arm
-      @image[1] = " |"
-    when :torso
-      @image[1] = " "
-    when :head
-      @image[0] = " "
+  def display(word, tries, incorrect_guesses)
+    puts body(tries)
+    puts "\n"
+    word.print_icons
+    print "    |    "
+    incorrect_guesses.each { |guess| print "#{guess} "}
+    puts "\n"
+  end
+
+  private
+
+  def body(tries)
+    case tries
+    when 6
+      [" O", "/|\\", "/ \\"]
+    when 5
+      [" O", "/|\\", "/"]
+    when 4
+      [" O", "/|\\", " "]
+    when 3
+      [" O", "/| "]
+    when 2
+      [" O", " | "]
+    when 1
+      " O"
     end
-
-    @body.pop
-  end
-end
-
-class Letter
-  def initialize(letter)
-    @letter = letter
-    @visible = false
-  end
-
-  def icon
-    if @visible
-      @char
-    else
-      '_'
-    end
-  end
-
-  def check(guess)
-    if @letter == guess
-      @visible = true
-    end
-  end
-end
-
-class Word
-  def initialize(word)
-    @letters = word.chars.map { |letter| Letter.new(letter) }
-  end
-
-  def print_icons
-    @letters.each { |letter| print "#{letter.icon} " }
-  end
-
-  def reveal_matches(guess)
-    @letters.each { |letter| letter.check(guess) }
   end
 end
