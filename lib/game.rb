@@ -10,39 +10,44 @@ require_relative 'save'
 class Game
   include Dictionary
   include Save
+  include Terminal
 
   def initialize(data = {word: Word.new(random_word), tries: 6, incorrect_guesses: []})
     @word = data[:word]
     @tries = data[:tries]
     @incorrect_guesses = data[:incorrect_guesses]
-    @terminal = Terminal.new
 
     play
   end
 
   def play
     until @tries == 0
-      @terminal.display(@word, @tries, @incorrect_guesses)
+      puts "\n\n\n\n"
+      display(@word, @tries, @incorrect_guesses)
       
       get_input
 
       break if @word.guessed
     end
 
+    display(@word, @tries, @incorrect_guesses)
+
     restart_program
   end
 
   def self.start_program
-    puts "[N]ew game"
-    puts "[L]oad game"
+    start_screen
   
     input = gets.chomp.downcase
   
     if input == 'n'
+      puts "\n\n\n\n"
       Game.new
     elsif input == 'l'
+      puts "\n\n\n\n"
       Game.load
     else
+      puts "\n\n"
       puts 'Invalid input, please try again'
       Game.start_program
     end
@@ -50,9 +55,12 @@ class Game
 
   def self.load
     if File.exist?('save.yaml')
-      puts "Loading saved game..."
+      puts "\n"
+      puts "Loading saved game...".light_yellow
+      puts "\n"
       sleep(1.5)
-      puts "Finished!"
+      puts "Finished!".light_green
+      puts "\n"
       game_data = YAML.load_file('save.yaml', permitted_classes: [Word, Symbol, Letter])
       Game.new(game_data)
     else
@@ -97,10 +105,10 @@ class Game
 
   def restart_program
     if @tries > 0
-      puts "You guessed the word! Returning to start screen..."
+      puts "You guessed the word! Returning to start screen...\n\n"
       sleep(3)
     else
-      puts "You almost got it! The word was #{@word.string}. Returning to start screen..."
+      puts "Too bad. The word was #{@word.string}. Returning to start screen...\n\n"
       sleep(3)
     end
 
@@ -108,6 +116,6 @@ class Game
   end
 end
 
-
+include Terminal
 
 Game.start_program

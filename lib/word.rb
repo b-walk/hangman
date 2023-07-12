@@ -25,7 +25,7 @@ class Word
   end
 
   def print_icons
-    @letters.each { |letter| print "#{letter.icon} " }
+    @letters.each { |letter| print "#{letter.icon.light_cyan} " }
   end
 
   def find_matches(guess)
