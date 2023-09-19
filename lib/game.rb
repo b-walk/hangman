@@ -5,7 +5,7 @@ require_relative 'terminal'
 require_relative 'word'
 require_relative 'save'
 
-# Game objects implement game logic on stored data values
+# Game objects represent the Hangman game as a whole; they operate on stored game-related values
 # Their values can be saved and loaded at any time
 class Game
   include Dictionary
