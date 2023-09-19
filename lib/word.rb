@@ -17,7 +17,7 @@ end
 
 class Word
   attr_reader :string
-  
+
   def initialize(word)
     @letters = word.chars.map { |letter| Letter.new(letter) }
     @string = word
@@ -30,9 +30,7 @@ class Word
 
   def find_matches(guess)
     @letters.each do |letter|
-      if letter.char == guess
-        letter.guessed = true
-      end
+      letter.guessed = true if letter.char == guess
     end
   end
 
@@ -48,12 +46,9 @@ class Word
     array = []
 
     @letters.each do |letter|
-      if letter.guessed
-        array << letter.char
-      end
+      array << letter.char if letter.guessed
     end
 
     array.uniq
   end
 end
-

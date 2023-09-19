@@ -12,7 +12,7 @@ class Game
   include Save
   include Terminal
 
-  def initialize(data = {word: Word.new(random_word), tries: 6, incorrect_guesses: []})
+  def initialize(data = { word: Word.new(random_word), tries: 6, incorrect_guesses: [] })
     @word = data[:word]
     @tries = data[:tries]
     @incorrect_guesses = data[:incorrect_guesses]
@@ -24,7 +24,7 @@ class Game
     until @tries == 0
       puts "\n\n\n\n"
       display(@word, @tries, @incorrect_guesses)
-      
+
       get_input
 
       break if @word.guessed
@@ -37,9 +37,9 @@ class Game
 
   def self.start_program
     start_screen
-  
+
     input = gets.chomp.downcase
-  
+
     if input == 'n'
       puts "\n\n\n\n"
       Game.new
@@ -56,15 +56,15 @@ class Game
   def self.load
     if File.exist?('save.yaml')
       puts "\n"
-      puts "Loading saved game...".light_yellow
+      puts 'Loading saved game...'.light_yellow
       puts "\n"
       sleep(1.5)
-      puts "Finished!".light_green
+      puts 'Finished!'.light_green
       puts "\n"
       game_data = YAML.load_file('save.yaml', permitted_classes: [Word, Symbol, Letter])
       Game.new(game_data)
     else
-      puts "No save data exists. Starting new game..."
+      puts 'No save data exists. Starting new game...'
       sleep(2)
       Game.start_program
     end
@@ -79,7 +79,7 @@ class Game
     when 'save'
       save
     when 'load'
-      puts "You may load a game after finishing this one."
+      puts 'You may load a game after finishing this one.'
       get_input
     else
       guess(input)
@@ -98,7 +98,7 @@ class Game
         @tries -= 1
       end
     else
-      puts "Invalid input, please try again."
+      puts 'Invalid input, please try again.'
       get_input
     end
   end

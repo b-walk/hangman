@@ -2,27 +2,32 @@
 :word: !ruby/object:Word
   letters:
   - !ruby/object:Letter
-    char: c
-    guessed: false
+    char: r
+    guessed: true
   - !ruby/object:Letter
-    char: a
-    guessed: false
+    char: e
+    guessed: true
   - !ruby/object:Letter
-    char: b
+    char: v
     guessed: false
   - !ruby/object:Letter
     char: i
     guessed: false
   - !ruby/object:Letter
+    char: s
+    guessed: false
+  - !ruby/object:Letter
+    char: i
+    guessed: false
+  - !ruby/object:Letter
+    char: o
+    guessed: false
+  - !ruby/object:Letter
     char: "n"
-    guessed: false
-  - !ruby/object:Letter
-    char: e
-    guessed: false
-  - !ruby/object:Letter
-    char: t
-    guessed: false
-  string: cabinet
+    guessed: true
+  string: revision
   correct_guesses: []
-:tries: 6
-:incorrect_guesses: []
+:tries: 4
+:incorrect_guesses:
+- t
+- m

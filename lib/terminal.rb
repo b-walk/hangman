@@ -5,18 +5,18 @@ require 'colorize'
 module Terminal
   LOGO = [
     "\n",
-    "  /\\  /\\__ _ _ __   __ _ _ __ ___   __ _ _ __  ",
+    '  /\\  /\\__ _ _ __   __ _ _ __ ___   __ _ _ __  ',
     " / /_/ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\ ",
-    "/ __  / (_| | | | | (_| | | | | | | (_| | | | |",
-    "\\/ /_/ \\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|",
-    "                   |___/                       ",
-    "\n",
+    '/ __  / (_| | | | | (_| | | | | | | (_| | | | |',
+    '\\/ /_/ \\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|',
+    '                   |___/                       ',
+    "\n"
   ]
 
   def start_screen
     print_colorized_logo
 
-    "[N]ew game     [L]oad game".chars.each do |char|
+    '[N]ew game     [L]oad game'.chars.each do |char|
       if ['[', ']', 'N', 'L'].include?(char)
         print char.yellow
         sleep(0.06)
@@ -32,43 +32,46 @@ module Terminal
   end
 
   def display(word, tries, incorrect_guesses)
-    puts ["___", "  |"]
+    puts ['___', '  |']
     puts body(tries)
     puts "\n"
     word.print_icons
-    print "   |   "
-    incorrect_guesses.each { |guess| print "#{guess.colorize(:red)} "}
+    print '   |   '
+    incorrect_guesses.each { |guess| print "#{guess.colorize(:red)} " }
     puts "\n\n"
   end
 
   private
 
   def print_colorized_logo
-    colors = [:red, :green, :blue, :light_red, :light_green, :light_blue]
+    colors = %i[red green blue light_red light_green light_blue]
 
     logo = LOGO.map do |row|
-      row.chars.map{ |char| char.colorize(colors.sample) }.join('')
+      row.chars.map { |char| char.colorize(colors.sample) }.join('')
     end
 
-    logo.each { |row| puts row.rjust(20); sleep(0.1) }
-    
+    logo.each do |row|
+      puts row.rjust(20)
+      sleep(0.1)
+    end
+
     puts "\n"
   end
 
   def body(tries)
     case tries
     when 6
-      ["  O", " /|\\", " / \\"].map { |string| string.green }
+      ['  O', ' /|\\', ' / \\'].map { |string| string.green }
     when 5
-      ["  O", " /|\\", " /"].map { |string| string.light_green }
+      ['  O', ' /|\\', ' /'].map { |string| string.light_green }
     when 4
-      ["  O", " /|\\", " "].map { |string| string.light_yellow }
+      ['  O', ' /|\\', ' '].map { |string| string.light_yellow }
     when 3
-      ["  O", " /| ", " "].map { |string| string.yellow }
+      ['  O', ' /| ', ' '].map { |string| string.yellow }
     when 2
-      ["  O", "  | ", " "].map { |string| string.light_red }
+      ['  O', '  | ', ' '].map { |string| string.light_red }
     when 1
-      ["  O", " ", " "].map { |string| string.red }
+      ['  O', ' ', ' '].map { |string| string.red }
     end
   end
 end
