@@ -1,7 +1,6 @@
 require 'colorize'
 
-# Terminal objects are created at the start of each game
-# They store images and display/update them each round
+# The Terminal module contains all methods related to the terminal display
 module Terminal
   LOGO = [
     "\n",
@@ -12,17 +11,19 @@ module Terminal
     '                   |___/                       ',
     "\n"
   ]
+  
+  START_SCREEN_OPTIONS = '[N]ew game     [L]oad game'
 
   def start_screen
     print_colorized_logo
 
-    '[N]ew game     [L]oad game'.chars.each do |char|
+    START_SCREEN_OPTIONS.chars.each do |char|
       if ['[', ']', 'N', 'L'].include?(char)
         print char.yellow
         sleep(0.06)
       elsif char == ' '
         print char
-        sleep(0.05)
+        sleep(0.045)
       else
         print char
         sleep(0.06)
