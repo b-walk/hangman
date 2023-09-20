@@ -25,6 +25,7 @@ module Save
       File.open('save.yaml', 'w') do |f|
         f.puts(YAML.dump({ word: @word, tries: @tries, incorrect_guesses: @incorrect_guesses }))
       end
+      
       puts "\n"
       puts 'Game has been saved.'.green
       puts "\n"
