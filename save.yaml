@@ -1,0 +1,33 @@
+---
+:word: !ruby/object:Word
+  letters:
+  - !ruby/object:Letter
+    char: r
+    guessed: true
+  - !ruby/object:Letter
+    char: e
+    guessed: true
+  - !ruby/object:Letter
+    char: v
+    guessed: false
+  - !ruby/object:Letter
+    char: i
+    guessed: false
+  - !ruby/object:Letter
+    char: s
+    guessed: false
+  - !ruby/object:Letter
+    char: i
+    guessed: false
+  - !ruby/object:Letter
+    char: o
+    guessed: false
+  - !ruby/object:Letter
+    char: "n"
+    guessed: true
+  string: revision
+  correct_guesses: []
+:tries: 4
+:incorrect_guesses:
+- t
+- m
