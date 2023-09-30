@@ -45,10 +45,14 @@ module Terminal
   private
 
   def print_colorized_logo
-    colors = %i[red green blue light_red light_green light_blue]
+    color_combo = [
+      [:light_cyan, :white],
+      [:red, :magenta, :light_red, :light_magenta],
+      [:green, :white, :light_green]
+  ].sample
 
     logo = LOGO.map do |row|
-      row.chars.map { |char| char.colorize(colors.sample) }.join('')
+      row.chars.map { |char| char.colorize(color_combo.sample) }.join('')
     end
 
     logo.each do |row|
